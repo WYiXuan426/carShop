@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.wyx.mapper.UserMapper">
+
+    <select id="searchUserByActive" resultType="map" parameterType="map">
+        select
+            userId,username,regTime,email,telephone,photo
+        from
+            user
+        <where>
+            <if test="userId != null and userId != ''">
+               and userId = #{userId}
+            </if>
+            <if test="username != null and username !='' ">
+               and username like concat('%',#{username},'%')
+            </if>
+            <if test="email != null and email != ''">
+                and email like concat(#{email} ,'%')
+            </if>
+            <if test="telephone !=null and telephone != ''">
+                and telephone like concat(#{telephone},'')
+            </if>
+        </where>
+    </select>
+    <update id="updateUser" parameterType="map">
+        update
+           user
+        <set>
+            <if test="userId !=null and userId != ''">
+                userId = #{userId},
+            </if>
+            <if test="username != null and username != ''">
+                username= #{username},
+            </if>
+            <if test="email != null and email != ''">
+                email = #{email},
+            </if>
+            <if test="telephone != null and telephone != ''">
+                telephone =#{telephone},
+            </if>
+            <if test="photo != null and photo != ''">
+                photo = #{photo},
+            </if>
+        </set>
+    </update>
+    <insert id="insertUser" parameterType="com.wyx.model.User">
+        insert
+        into
+         user
+            <trim prefix="(" suffix=")" suffixOverrides="," >
+                <if test="userId !=null and userId != ''">
+                    userId,
+                </if>
+                <if test="username != null and username != ''">
+                    username,
+                </if>
+
+                <if test="password != null and password != ''">
+                    password,
+                </if>
+
+                <if test="regTime != null and regTime != ''">
+                    regTime,
+                </if>
+
+                <if test="email != null and email != ''">
+                    email,
+                </if>
+                <if test="telephone != null and telephone != ''">
+                    telephone,
+                </if>
+                <if test="photo != null and photo != ''">
+                    photo,
+                </if>
+            </trim>
+        values
+            <trim prefix="(" suffix=")" suffixOverrides="," >
+                <if test="userId !=null and userId != ''">
+                    #{userId},
+                </if>
+                <if test="username != null and username != ''">
+                    #{username},
+                </if>
+
+                <if test="password != null and password != ''">
+                    #{password},
+                </if>
+
+                <if test="regTime != null and regTime != ''">
+                    #{regTime},
+                </if>
+
+                <if test="email != null and email != ''">
+                    #{email},
+                </if>
+                <if test="telephone != null and telephone != ''">
+                    #{telephone},
+                </if>
+                <if test="photo != null and photo != ''">
+                    #{photo},
+                </if>
+            </trim>
+    </insert>
+    <select id="loginUser" resultType="map" parameterType="map">
+        select
+            userId,username,regTime,email,telephone,photo
+        from
+            user
+        <where>
+            <if test="userId != null and userId != ''">
+                 userId = #{userId}
+            </if>
+            <if test="email != null and email != ''">
+                and email =#{email}
+            </if>
+            <if test="telephone !=null and telephone != ''">
+                and telephone=#{telephone}
+            </if>
+
+                and password = #{password}
+
+        </where>
+
+    </select>
+</mapper>
