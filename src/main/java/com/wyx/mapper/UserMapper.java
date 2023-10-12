@@ -17,5 +17,7 @@ public interface UserMapper {
 
     Map<String,Object> loginUser(Map<String,Object> paramUid);
 
+    Map<String,Object> selectUser(User paramUser);
+
 
 }

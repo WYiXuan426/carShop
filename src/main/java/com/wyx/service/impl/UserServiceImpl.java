@@ -5,6 +5,7 @@ import com.wyx.model.User;
 import com.wyx.service.UserService;
 import com.wyx.util.NumberUtil;
 import com.wyx.util.PasswordUtil;
+import com.wyx.util.TimeUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -34,24 +35,45 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Map<String, Object>  updateUser(Map<String, Object> paramUser) {
+
+
         return null;
     }
 
     @Override
     public Map<String, Object>  insertUser(User paramUser) {
         Map<String, Object> insertMap = new HashMap<String, Object>();
-        paramUser.setUserId(NumberUtil.getRandomNumber());
-//        byte[] realPassword = PasswordUtil.computeSHA1(paramUser.getPassword());
-        String realPassword = PasswordUtil.encrypt(paramUser.getPassword());
-        paramUser.setPassword(realPassword);
-        Integer insertResult= userMapper.insertUser(paramUser);
-        if (insertResult>0){
-            insertMap.put("data","注册成功");
+        //生成一个随机id
+        String userId = NumberUtil.getRandomNumber();
+        paramUser.setRegTime(TimeUtil.dateUtil());
+        Map<String, Object> userMap = userMapper.selectUser(paramUser);
 
+        //判断是否重复的用户id，邮箱，手机号
+        if (userMap!=null) {
+            //如果用户id相同则从新调用该方法新生成一个用户id即可
+            paramUser.setUserId(userId);
+            if (userMapper.selectUser(paramUser) != null) {
+                insertUser(paramUser);
+            } else if (userMap.get("telephone") != null) {
+                insertMap.put("error", "该手机号已被绑定，请注册时更换手机号");
+            }else {
+                insertMap.put("error","注册失败");
+            }
         }else {
-            insertMap.put("error","注册失败,请重试");
-        }
+            paramUser.setUserId(userId);
+            if (userMapper.selectUser(paramUser) != null) {
+                insertUser(paramUser);
+            } else {
+                Integer insertResult = userMapper.insertUser(paramUser);
 
+                if (insertResult > 0) {
+                    insertMap.put("data", "注册成功");
+
+                } else {
+                    insertMap.put("error", "注册失败,请重试");
+                }
+            }
+        }
         return insertMap;
     }
 

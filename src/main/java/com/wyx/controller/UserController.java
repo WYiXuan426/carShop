@@ -3,6 +3,7 @@ package com.wyx.controller;
 import com.wyx.model.User;
 import com.wyx.service.UserService;
 import com.wyx.util.NumberUtil;
+import com.wyx.util.PasswordUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -23,7 +24,7 @@ public class UserController {
     }
     @PostMapping(value = "/insertUser")
     public Map<String, Object>  insertUser(@ModelAttribute User paramUser,@RequestParam(value = "realPassword") String realPassword) {
-        paramUser.setPassword(realPassword);
+        paramUser.setPassword(PasswordUtil.encrypt(realPassword));
         return userService.insertUser(paramUser);
     }
     @PostMapping(value = "/loginUser")

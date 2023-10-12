@@ -122,4 +122,21 @@
         </where>
 
     </select>
+    <select id="selectUser"  resultType="map" parameterType="com.wyx.model.User">
+        select
+            userId,email,telephone
+        from
+            user
+        <where>
+            <if test="userId != null and userId != ''">
+                and userId = #{userId}
+            </if>
+            <if test="email != null and email != ''">
+                and email = #{email}
+            </if>
+            <if test="telephone != null and telephone != ''">
+                and telephone = #{telephone}
+            </if>
+        </where>
+    </select>
 </mapper>
