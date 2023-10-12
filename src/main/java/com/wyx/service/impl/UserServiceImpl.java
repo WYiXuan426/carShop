@@ -42,7 +42,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Map<String, Object>  insertUser(User paramUser) {
-        Map<String, Object> insertMap = new HashMap<String, Object>();
+        Map<String, Object> insertMap = new HashMap<>();
         //生成一个随机id
         String userId = NumberUtil.getRandomNumber();
         paramUser.setRegTime(TimeUtil.dateUtil());
